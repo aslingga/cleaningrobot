@@ -6,7 +6,7 @@
     ["S", "S", "S", "S", "S"],
     ["S", "S", "S", "S", "S"]
   ],
-  "start": {"X": 2, "Y": 0, "facing": "W"},
-  "commands": [ "TL","A","C","A","C","TR","A","C","A","TR","A","C"],
+  "start": {"X": 2, "Y": 1, "facing": "W"},
+  "commands": [ "TL","A","C","A","C","TR","A","C","A","TR","TR","TR","A","C"],
   "battery": 100
 }

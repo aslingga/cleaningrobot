@@ -5,7 +5,12 @@
     $source = $argv[1];
     $destination = $argv[2];
     
-    $source = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . $source);
+    $sourceFile = __DIR__ . DIRECTORY_SEPARATOR . $source;
+    if (!file_exists($sourceFile)) {
+    	echo 'Source file does not exist!';
+    	exit(0);
+    }
+    $source = file_get_contents($sourceFile);
     
     $sourceArr = json_decode($source, true);    
     $map = $sourceArr['map'];
