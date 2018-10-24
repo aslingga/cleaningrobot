@@ -94,6 +94,7 @@ class Robot {
         }
     }
     
+    // change the state to be from obstacle 
     public function freeFromObstacle() {
         $this->obstacle = self::OBSTACLE_WALL_FREEZE;
     }
@@ -102,6 +103,7 @@ class Robot {
         $this->cursor = $facing;
     }
     
+    // get the x position of the robot in the floor
     public function getXPosition() {
         return $this->xPosition;
     }
@@ -110,10 +112,12 @@ class Robot {
         $this->xPosition = $value;
     }
     
+    // move the the robot in the floor in the spesific x position
     public function moveXPosition($value) {
         $this->setXPosition($this->getXPosition() + $value);
     }
     
+    // get the y position of the robot in the floor
     public function getYPosition() {
         return $this->yPosition;
     }
@@ -122,10 +126,12 @@ class Robot {
         $this->yPosition = $value;
     }
     
+    // move the the robot in the floor in the spesific y position
     public function moveYPosition($value) {
         $this->setYPosition($this->getYPosition() + $value);
     }
     
+    // change the facing of the robot
     public function moveCursorDirection($instruction) {
         $facingVal = 0;
         $currentFacingVal = array_search($this->getCursor(), $this->facingCursor);
@@ -150,11 +156,11 @@ class Robot {
             $this->consumeBattery($instruction);
             $this->setCursor($this->facingCursor[$nextFacingVal]);
         }
-        
-        /* echo '<br>Console log: Cursor moved to ' . $this->getCursor() . ' for instruction ' . $instruction . ' (' . $this->getXPosition() . ', ' . $this->getYPosition() . ') <br>'; */
     }
     
+    // move robot according to the spesific instruction
     public function movePosition($instruction) {
+    	// if the instruction is Advance
         if ($instruction == self::ADVANCE_COMMAND) {
             switch ($this->getCursor()) {
                 case 'N':
@@ -177,7 +183,8 @@ class Robot {
                     break;
             }
         }
-        
+
+        // if the instruction is Back
         if ($instruction == self::BACK_COMMAND) {            
             switch ($this->getCursor()) {
                 case 'N':
@@ -202,8 +209,6 @@ class Robot {
         }
         
         $this->consumeBattery($instruction);
-        
-        /* echo '<br>Console log: In moving position (' . $this->reachObstacleOrWall() . ') for instruction ' . $instruction . ' (' . $this->getXPosition() . ', ' . $this->getYPosition() . ') <br>'; */
                 
         if ($this->reachObstacleOrWall()) {            
             $this->hitObstacle();
@@ -239,24 +244,20 @@ class Robot {
         $this->battery = $battery;
     }
     
+    // consume the energy for each instruction
     public function consumeBattery($instruction) {
         $before = $this->getBattery();
         $consumed = $this->batteryCommandConsume[$instruction];
         $after = $before - $consumed; 
         
         $this->setBattery($this->getBattery() - $this->batteryCommandConsume[$instruction]);
-        /* echo '<br>Console log: Battery left (' . $before . ' -  ' . $consumed . ') to be ' . $after . ' for instruction ' . $instruction . ' (' . $this->getXPosition() . ', ' . $this->getYPosition() . ') <br>'; */
     }
     
     public function stillHaveEnergy($instruction) {
-        /* return ($this->getBattery() > 0 && $this->getBattery() >= $this->batteryCommandConsume[$instruction]); */
-        return ($this->getBattery() > 0);
+        return ($this->getBattery() > 0 && $this->getBattery() >= $this->batteryCommandConsume[$instruction]);
     }
     
     public function setInstruction($instructions) {
-        /* $this->instructions = array('TL', 'A', 'C', 'A', 'C', 'TR', 'A', 'C');
-        $this->instructions = array('TL', 'A', 'C', 'A', 'C', 'A', 'C', 'A', 'A', 'A', 'C');
-        $this->instructions = array('TR', 'A', 'C', 'A', 'C', 'TR', 'A', 'C'); */
     	$this->instructions = $instructions;
     }
     
@@ -274,8 +275,6 @@ class Robot {
         	$this->cleanGrid($x, $y);
         }
         $this->floor->setGrid($x, $y, self::CLEAN_COMMAND);
-        
-        /* echo '<br>Console log: Grid is cleaned for instruction ' . self::CLEAN_COMMAND . ' (' . $this->getXPosition() . ', ' . $this->getYPosition() . ') <br>'; */
     }
     
     public function visitGrid($x, $y) {
@@ -312,9 +311,8 @@ class Robot {
     	return $this->finalPositiion;
     }
     
-    public function reachObstacleOrWall() {
-        /* echo '<br>Console log: Reach Obstacle or Wall ' . $this->getXPosition() . $this->getYPosition() . ' <br>'; */
-        
+    // check if the robot is reach obstacle or wall
+    public function reachObstacleOrWall() {        
         return (($this->getXPosition() < 0) ||
             ($this->getYPosition() < 0) ||
             ($this->getXPosition() >= $this->floor->getMaxX()) ||
@@ -324,8 +322,6 @@ class Robot {
     }
     
     public function action($instruction, $x, $y) {
-        /* echo '<br>Console log: <u><strong>Execute instruction ' . $instruction . ' (' . $this->getXPosition() . ', ' . $this->getYPosition() . ')</strong></u><br>'; */
-        
         $this->visitGrid($x, $y);
         
         switch ($instruction) {
@@ -355,6 +351,7 @@ class Robot {
         }
     }
     
+    // get the final state of the robot
     public function getResult() {
         return array(
         	'visited' => $this->getVisitedGrid(),
