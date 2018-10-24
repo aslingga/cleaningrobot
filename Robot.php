@@ -8,13 +8,17 @@ class Robot {
     private $xPosition;
     private $yPosition;
     private $obstacle;
+    private $facingCursor;
+    private $batteryCommandConsume;
+    private $obstacleOperation;
+    private $directions;
     
     const CLEAN_COMMAND = 'C';
     const TURN_LEFT_COMMAND = 'TL';
     const TURN_RIGHT_COMMAND = 'TR';
     const ADVANCE_COMMAND = 'A';
     const BACK_COMMAND = 'B';
-    const FACING_CURSOR = array('N', 'E', 'S', 'W');
+    /* const FACING_CURSOR = array('N', 'E', 'S', 'W'); */
     const OBSTACLE_WALL_HIT = 1;
     const OBSTACLE_WALL_FREEZE = 0;
     
@@ -23,7 +27,7 @@ class Robot {
     const SOUTH_DIRECTION = array (1, 0);
     const WEST_DIRECTION = array (0, -1);
     
-    const BATTERY_COMMAND_CONSUME = array(
+    /* const BATTERY_COMMAND_CONSUME = array(
         'TL' => 1, 
         'TR' => 1, 
         'A' => 2, 
@@ -37,10 +41,32 @@ class Robot {
         array('TL', 'TL', 'A'),
         array('TR', 'B', 'TR', 'A'),
         array('TL', 'TL', 'A')
-    );
+    ); */
     
     public function __construct($xStart, $yStart, $facing, $battery) {
+    	$this->facingCursor = array('N', 'E', 'S', 'W');
+    	$this->batteryCommandConsume = array(
+	        'TL' => 1, 
+	        'TR' => 1, 
+	        'A' => 2, 
+	        'B' => 3, 
+	        'C' => 5, 
+	    );
+    	$this->obstacleOperation = array(
+	        array('TR', 'A'),
+	        array('TL', 'B', 'TR', 'A'),
+	        array('TL', 'TL', 'A'),
+	        array('TR', 'B', 'TR', 'A'),
+	        array('TL', 'TL', 'A')
+	    );
+    	$this->directions = array(
+			'N' => array (-1, 0),
+    		'E' => array (0, 1),
+    		'S' => array (1, 0),
+    		'W' => array (0, -1)
+    	);
         $this->obstacle = self::OBSTACLE_WALL_FREEZE;
+        
         $this->setPosition($xStart, $yStart);
         $this->setCursor($facing);
         $this->setBattery($battery);
@@ -97,7 +123,7 @@ class Robot {
     
     public function moveCursorDirection($instruction) {
         $facingVal = 0;
-        $currentFacingVal = array_search($this->getCursor(), self::FACING_CURSOR);
+        $currentFacingVal = array_search($this->getCursor(), $this->facingCursor);
         
         if ($instruction == self::TURN_RIGHT_COMMAND) {
             $facingVal = 1;
@@ -110,14 +136,14 @@ class Robot {
             $nextFacingVal = $currentFacingVal + $facingVal;
             
             if ($nextFacingVal == -1) {
-                $nextFacingVal = count(self::FACING_CURSOR) - 1;
+                $nextFacingVal = count($this->facingCursor) - 1;
             }
-            else if ($nextFacingVal == count(self::FACING_CURSOR)) {
+            else if ($nextFacingVal == count($this->facingCursor)) {
                 $nextFacingVal = 0;
             }
             
             $this->consumeBattery($instruction);
-            $this->setCursor(self::FACING_CURSOR[$nextFacingVal]);
+            $this->setCursor($this->facingCursor[$nextFacingVal]);
         }
         
         echo '<br>Console log: Cursor moved to ' . $this->getCursor() . ' for instruction ' . $instruction . ' (' . $this->getXPosition() . ', ' . $this->getYPosition() . ') <br>';
@@ -127,20 +153,20 @@ class Robot {
         if ($instruction == self::ADVANCE_COMMAND) {
             switch ($this->getCursor()) {
                 case 'N':
-                    $this->moveXPosition(self::NORTH_DIRECTION[0]);
-                    $this->moveYPosition(self::NORTH_DIRECTION[1]);
+                    $this->moveXPosition($this->directions['N'][0]);
+                    $this->moveYPosition($this->directions['N'][1]);
                     break;
                 case 'E':
-                    $this->moveXPosition(self::EAST_DIRECTION[0]);
-                    $this->moveYPosition(self::EAST_DIRECTION[1]);
+                    $this->moveXPosition($this->directions['E'][0]);
+                    $this->moveYPosition($this->directions['E'][1]);
                     break;
                 case 'S':
-                    $this->moveXPosition(self::SOUTH_DIRECTION[0]);
-                    $this->moveYPosition(self::SOUTH_DIRECTION[1]);
+                    $this->moveXPosition($this->directions['S'][0]);
+                    $this->moveYPosition($this->directions['S'][1]);
                     break;
                 case 'W':
-                    $this->moveXPosition(self::WEST_DIRECTION[0]);
-                    $this->moveYPosition(self::WEST_DIRECTION[1]);
+                    $this->moveXPosition($this->directions['W'][0]);
+                    $this->moveYPosition($this->directions['W'][1]);
                     break;
                 default:
                     break;
@@ -150,20 +176,20 @@ class Robot {
         if ($instruction == self::BACK_COMMAND) {            
             switch ($this->getCursor()) {
                 case 'N':
-                    $this->moveXPosition(self::SOUTH_DIRECTION[0]);
-                    $this->moveYPosition(self::SOUTH_DIRECTION[1]);
+                    $this->moveXPosition($this->directions['S'][0]);
+                    $this->moveYPosition($this->directions['S'][1]);
                     break;
                 case 'E':
-                    $this->moveXPosition(self::WEST_DIRECTION[0]);
-                    $this->moveYPosition(self::WEST_DIRECTION[1]);
+                    $this->moveXPosition($this->directions['W'][0]);
+                    $this->moveYPosition($this->directions['W'][1]);
                     break;
                 case 'S':
-                    $this->moveXPosition(self::NORTH_DIRECTION[0]);
-                    $this->moveYPosition(self::NORTH_DIRECTION[1]);
+                    $this->moveXPosition($this->directions['N'][0]);
+                    $this->moveYPosition($this->directions['N'][1]);
                     break;
                 case 'W':
-                    $this->moveXPosition(self::EAST_DIRECTION[0]);
-                    $this->moveYPosition(self::EAST_DIRECTION[1]);
+                    $this->moveXPosition($this->directions['E'][0]);
+                    $this->moveYPosition($this->directions['E'][1]);
                     break;
                 default:
                     break;
@@ -195,7 +221,7 @@ class Robot {
         }
         
         if (!$this->freeToMove()) {
-            foreach (self::OBSTACLE_OPERATION as $operation) {                
+            foreach ($this->obstacleOperation as $operation) {                
                 foreach ($operation as $instruction) {
                     if (!$this->stillHaveEnergy($instruction)) {
                         break 2;
@@ -223,15 +249,15 @@ class Robot {
     
     public function consumeBattery($instruction) {
         $before = $this->getBattery();
-        $consumed = self::BATTERY_COMMAND_CONSUME[$instruction];
+        $consumed = $this->batteryCommandConsume[$instruction];
         $after = $before - $consumed; 
         
-        $this->setBattery($this->getBattery() - self::BATTERY_COMMAND_CONSUME[$instruction]);
+        $this->setBattery($this->getBattery() - $this->batteryCommandConsume[$instruction]);
         echo '<br>Console log: Battery left (' . $before . ' -  ' . $consumed . ') to be ' . $after . ' for instruction ' . $instruction . ' (' . $this->getXPosition() . ', ' . $this->getYPosition() . ') <br>';
     }
     
     public function stillHaveEnergy($instruction) {
-        /* return ($this->getBattery() > 0 && $this->getBattery() >= self::BATTERY_COMMAND_CONSUME[$instruction]); */
+        /* return ($this->getBattery() > 0 && $this->getBattery() >= $this->batteryCommandConsume[$instruction]); */
         return ($this->getBattery() > 0);
     }
     
