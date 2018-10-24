@@ -12,17 +12,18 @@ class Floor {
         
     }
     
-    public function initiateGrid() {
+    public function initiateGrid($grids) {
         $this->tiles = array();
+        $this->tiles = $grids;
         
-        $this->tiles[0][0] = 'S';
+        /* $this->tiles[0][0] = 'S';
         $this->tiles[0][1] = 'S';
         $this->tiles[0][2] = 'S';
         $this->tiles[0][3] = 'S';
         
         $this->tiles[1][0] = 'S';
         $this->tiles[1][1] = 'S';
-        $this->tiles[1][2] = 'S';
+        $this->tiles[1][2] = 'C';
         $this->tiles[1][3] = 'S';
         
         $this->tiles[2][0] = 'S';
@@ -31,9 +32,9 @@ class Floor {
         $this->tiles[2][3] = 'S';
         
         $this->tiles[3][0] = 'S';
-        $this->tiles[3][1] = 'S';
+        $this->tiles[3][1] = null;
         $this->tiles[3][2] = 'S';
-        $this->tiles[3][3] = 'S';
+        $this->tiles[3][3] = 'S'; */
     }
     
     public function getXAxis() {
