@@ -16,9 +16,7 @@
     $robot = new Robot($start, $instructions, $battery);
     $floor = new Floor();
     
-    $floor->setSource();
     $floor->initiateGrid($map);
-    
     $robot->setFloor($floor);
     $robot->startJob();
     

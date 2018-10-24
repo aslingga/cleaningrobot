@@ -8,4 +8,4 @@ automatically without manual intervention.
 
 ## Usage
 ```php
- php cleaning_robot.php source.json output.json
+php cleaning_robot.php source.json output.json
