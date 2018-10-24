@@ -10,7 +10,9 @@
     
     $robot->setFloor($floor);
     $robot->setInstruction(null);
-    $robot->clean();
+    $robot->startJob();
+    
+    var_dump($robot->getResult());
     
     $floor->printTiles();
 ?>

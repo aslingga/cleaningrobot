@@ -4,6 +4,10 @@ class Floor {
     private $xAxis;
     private $yAxis;
     
+    const GRID_CLEANED = 'C';
+    const GRID_FREE_TO_CLEAN = 'S';
+    const GRID_WALL = null;
+    
     public function setSource() {
         
     }
@@ -38,6 +42,14 @@ class Floor {
     
     public function getYAxis() {
         return $this->yAxis;
+    }
+    
+    public function getMaxY() {
+        return 4;
+    }
+    
+    public function getMaxX() {
+        return 4;
     }
     
     public function getGrid($x, $y) {
